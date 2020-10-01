@@ -1,0 +1,34 @@
+{
+  "name": "labyrinth",
+  "version": "1.0.0",
+  "author": "ivyman",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "scripts": {
+    "clean": "rimraf dist/",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "develop": "nodemon --watch 'src/**/*.ts' --quiet --exec 'ts-node' src/index.ts",
+    "start": "yarn build && node dist/index.js",
+    "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "lint": "eslint src/ --ext .ts"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.3.0",
+    "@typescript-eslint/parser": "^4.3.0",
+    "eslint": "^7.10.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.3.0",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.1.2",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn format && yarn lint",
+      "pre-push": "yarn test"
+    }
+  }
+}

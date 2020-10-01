@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "commonjs",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "lib": ["es2017", "dom"], //
+    "paths": {
+      "*": ["node_modules/*"]
+    },
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts"]
+}
