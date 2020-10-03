@@ -1,3 +1,13 @@
-import { x } from './test';
+import clear from 'clear';
+import chalk from 'chalk';
+import figlet from 'figlet';
 
-console.log('run', x);
+import { someConst } from './module';
+
+clear();
+
+console.log(
+  chalk.yellow(figlet.textSync('labyrinth', { horizontalLayout: 'full' }))
+);
+
+console.log(chalk.green(someConst));
