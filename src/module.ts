@@ -1,1 +1,0 @@
-export const someConst = 'test';
