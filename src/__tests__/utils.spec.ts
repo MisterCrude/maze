@@ -6,10 +6,13 @@ import {
   isValidPoint,
   getQueueNode,
   fetchFileData,
+  isVisitedPoint,
+  isValidPathPoint,
   isEndpointAchieved,
   isValidEndStartPoints
 } from '../utils';
 import { IPoint, IQueueNode } from '../types';
+import { VISITED_MARK } from '../consts';
 
 jest.mock('node-fetch', () => jest.fn());
 import fetch from 'node-fetch';
@@ -72,35 +75,40 @@ it('checks is end point achieved', () => {
   expect(isAchived).toBeTruthy();
 });
 
-it('checks is point valid', () => {
-  const testPointX: number = 0;
-  const testPointY: number = 9;
-  const ROWS: number = 10;
-  const COLS: number = 10;
-
-  const isValid: boolean = isValidPoint(testPointX, testPointY, COLS, ROWS);
-
-  expect(isValid).toBeTruthy();
-});
-
-it('checks is point invalid', () => {
-  const testPointX: number = 0;
-  const testPointY: number = 20;
-  const ROWS: number = 10;
-  const COLS: number = 10;
-
-  const isInvalid: boolean = isValidPoint(testPointX, testPointY, COLS, ROWS);
-
-  expect(isInvalid).toBeFalsy();
-});
-
-it("checks is end point din't achieve", () => {
+it("checks isn't end point achieve", () => {
   const point: IPoint = { x: 1, y: 0 };
   const endPoint: IPoint = { x: 0, y: 2 };
 
   const isAchived: boolean = isEndpointAchieved(point, endPoint);
 
   expect(isAchived).toBeFalsy();
+});
+
+it('checks is point valid', () => {
+  const testPointX: number = 0;
+  const testPointY: number = 9;
+  const COLS_AMOUNT: number = 10;
+  const ROWS_AMOUNT: number = 10;
+
+  const isValid: boolean = isValidPoint(
+    testPointX,
+    testPointY,
+    COLS_AMOUNT,
+    ROWS_AMOUNT
+  );
+
+  expect(isValid).toBeTruthy();
+});
+
+it('checks is point invalid', () => {
+  const col: number = 0;
+  const row: number = 20;
+  const COLS_AMOUNT: number = 10;
+  const ROWS_AMOUNT: number = 10;
+
+  const isInvalid: boolean = isValidPoint(col, row, COLS_AMOUNT, ROWS_AMOUNT);
+
+  expect(isInvalid).toBeFalsy();
 });
 
 describe('fetch file data', () => {
@@ -135,4 +143,52 @@ describe('fetch file data', () => {
 
     expect(result).toEqual(errorMsg);
   });
+});
+
+it('checks is path point valid', () => {
+  const matrix: string[][] = [
+    ['0', '1', '0'],
+    ['0', '1', '0'],
+    ['0', '1', '0']
+  ];
+
+  const isInside: boolean = isValidPathPoint(1, 1, matrix);
+
+  expect(isInside).toBeTruthy();
+});
+
+it('checks is path point invalid', () => {
+  const matrix: string[][] = [
+    ['0', '1', '0'],
+    ['0', '1', '0'],
+    ['0', '1', '0']
+  ];
+
+  const isInside: boolean = isValidPathPoint(0, 0, matrix);
+
+  expect(isInside).toBeFalsy();
+});
+
+it('checks is point visited', () => {
+  const visited: string[][] = [
+    ['0', VISITED_MARK, '0'],
+    ['0', '1', '0'],
+    ['0', '1', '0']
+  ];
+
+  const isVisited: boolean = isVisitedPoint(1, 0, visited);
+
+  expect(isVisited).toBeTruthy();
+});
+
+it("checks isn't point visited", () => {
+  const visited: string[][] = [
+    ['0', VISITED_MARK, '0'],
+    ['0', '1', '0'],
+    ['0', '1', '0']
+  ];
+
+  const isVisited: boolean = isVisitedPoint(0, 0, visited);
+
+  expect(isVisited).toBeFalsy();
 });
