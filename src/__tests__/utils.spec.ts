@@ -3,16 +3,16 @@ import { mocked } from 'ts-jest/utils';
 import {
   getEndPoint,
   getPoint,
-  isValidPoint,
   getQueueNode,
+  createVisited,
   fetchFileData,
+  isValidPoint,
   isVisitedPoint,
-  isValidPathPoint,
+  isValidPointPath,
   isEndpointAchieved,
   isValidEndStartPoints
 } from '../utils';
-import { IPoint, IQueueNode } from '../types';
-import { VISITED_MARK } from '../consts';
+import { IPoint, TVisited, TMatrix, IQueueNode } from '../types';
 
 jest.mock('node-fetch', () => jest.fn());
 import fetch from 'node-fetch';
@@ -39,7 +39,7 @@ it('gets queue node', () => {
 });
 
 it('checks start point or end point is valid', () => {
-  const matrix: string[][] = [
+  const matrix: TMatrix = [
     ['0', '1', '0'],
     ['0', '1', '0'],
     ['0', '1', '1']
@@ -53,7 +53,7 @@ it('checks start point or end point is valid', () => {
 });
 
 it('checks star tpoint or end point is invalid', () => {
-  const matrix: string[][] = [
+  const matrix: TMatrix = [
     ['0', '1', '0'],
     ['0', '1', '0'],
     ['0', '1', '0']
@@ -146,34 +146,33 @@ describe('fetch file data', () => {
 });
 
 it('checks is path point valid', () => {
-  const matrix: string[][] = [
+  const matrix: TMatrix = [
     ['0', '1', '0'],
     ['0', '1', '0'],
     ['0', '1', '0']
   ];
 
-  const isInside: boolean = isValidPathPoint(1, 1, matrix);
+  const isInside: boolean = isValidPointPath(1, 1, matrix);
 
   expect(isInside).toBeTruthy();
 });
 
 it('checks is path point invalid', () => {
-  const matrix: string[][] = [
+  const matrix: TMatrix = [
     ['0', '1', '0'],
     ['0', '1', '0'],
     ['0', '1', '0']
   ];
 
-  const isInside: boolean = isValidPathPoint(0, 0, matrix);
+  const isInside: boolean = isValidPointPath(0, 0, matrix);
 
   expect(isInside).toBeFalsy();
 });
 
 it('checks is point visited', () => {
-  const visited: string[][] = [
-    ['0', VISITED_MARK, '0'],
-    ['0', '1', '0'],
-    ['0', '1', '0']
+  const visited: TVisited = [
+    [false, true],
+    [false, false]
   ];
 
   const isVisited: boolean = isVisitedPoint(1, 0, visited);
@@ -182,13 +181,26 @@ it('checks is point visited', () => {
 });
 
 it("checks isn't point visited", () => {
-  const visited: string[][] = [
-    ['0', VISITED_MARK, '0'],
-    ['0', '1', '0'],
-    ['0', '1', '0']
+  const visited: TVisited = [
+    [false, true],
+    [false, false]
   ];
 
   const isVisited: boolean = isVisitedPoint(0, 0, visited);
 
   expect(isVisited).toBeFalsy();
+});
+
+it('checks visited is created properly', () => {
+  const matrix: TMatrix = [
+    ['0', '1'],
+    ['0', '1']
+  ];
+
+  const visited: TVisited = createVisited(matrix);
+
+  expect(visited).toMatchObject<TVisited>([
+    [false, false],
+    [false, false]
+  ]);
 });

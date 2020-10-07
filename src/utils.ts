@@ -1,7 +1,6 @@
 import fetch, { Response } from 'node-fetch';
 
-import { VISITED_MARK } from './consts';
-import { IPoint, IQueueNode } from './types';
+import { IPoint, TVisited, TMatrix, IQueueNode } from './types';
 
 export const print = (...args: any): void => console.log(...args);
 
@@ -36,7 +35,7 @@ export const isValidPoint = (
 ): boolean => row >= 0 && row < ROWS_AMOUNT && col >= 0 && col < COLS_AMOUNT;
 
 export const isValidEndStartPoints = (
-  matrix: string[][],
+  matrix: TMatrix,
   startPoint: IPoint,
   endPoint: IPoint
 ): boolean =>
@@ -46,14 +45,17 @@ export const isValidEndStartPoints = (
 export const isEndpointAchieved = (point: IPoint, endPoint: IPoint): boolean =>
   point.x === endPoint.x && point.y === endPoint.y;
 
-export const isValidPathPoint = (
+export const isValidPointPath = (
   col: number,
   row: number,
-  matrix: string[][]
-): boolean => Number(matrix[row][col]) === 1;
+  matrix: TMatrix
+): boolean => !!matrix[row] && Number(matrix[row][col]) === 1;
 
 export const isVisitedPoint = (
   col: number,
   row: number,
-  visited: string[][]
-): boolean => visited[row][col] === VISITED_MARK;
+  visited: TVisited
+): boolean => !!visited[row] && visited[row][col] === true;
+
+export const createVisited = (matrix: TMatrix): TVisited =>
+  matrix.map((row: string[]) => row.map(() => false));

@@ -17,3 +17,7 @@ export interface IQueueNode {
   point: IPoint;
   dist: number;
 }
+
+export type TVisited = boolean[][];
+
+export type TMatrix = string[][];
