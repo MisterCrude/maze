@@ -16,13 +16,10 @@ export const getQueueNode = (point: IPoint, dist: number): IQueueNode => ({
   dist
 });
 
-export const fetchFileData = async (
-  url: string,
-  errorMsg: string
-): Promise<string> => {
+export const fetchFileData = async (url: string): Promise<string | null> => {
   const res: Response = await fetch(url);
 
-  return res.status === 200 ? res.text() : errorMsg;
+  return res.status === 200 ? res.text() : null;
 };
 
 export const isValideUrl = (input: string): boolean => input?.length < 3;
