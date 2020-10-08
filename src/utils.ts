@@ -11,9 +11,9 @@ export const getEndPoint = (cols: number, rows: number): IPoint => ({
 
 export const getPoint = (x: number, y: number): IPoint => ({ x, y });
 
-export const getQueueNode = (point: IPoint, corner: number): IQueueNode => ({
+export const getQueueNode = (point: IPoint, corners: number): IQueueNode => ({
   point,
-  corner
+  corners
 });
 
 export const fetchFileData = async (url: string): Promise<string | null> => {
@@ -57,7 +57,10 @@ export const isVisitedPoint = (
 export const createVisited = (matrix: TMatrix): TVisited =>
   matrix.map((row: string[]) => row.map(() => false));
 
-export const hasTraceCorner = (pathTrace: IPoint[]): boolean =>
-  pathTrace.length > 2 &&
-  pathTrace[0].x !== pathTrace[2].x &&
-  pathTrace[0].y !== pathTrace[2].y;
+export const hasTraceCorner = (
+  pathTrace: IPoint[],
+  cornersAmount: number
+): number =>
+  pathTrace[0].x !== pathTrace[2].x && pathTrace[0].y !== pathTrace[2].y
+    ? cornersAmount + 1
+    : cornersAmount;

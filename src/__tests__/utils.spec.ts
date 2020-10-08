@@ -3,6 +3,7 @@ import { mocked } from 'ts-jest/utils';
 import {
   getEndPoint,
   getPoint,
+  hasTraceCorner,
   getQueueNode,
   createVisited,
   fetchFileData,
@@ -31,11 +32,11 @@ it('gets correct point', () => {
 
 it('gets queue node', () => {
   const point: IPoint = { x: 2, y: 4 };
-  const dist: number = 5;
+  const corners: number = 5;
 
-  const queueNode: IQueueNode = getQueueNode(point, dist);
+  const queueNode: IQueueNode = getQueueNode(point, corners);
 
-  expect(queueNode).toMatchObject<IQueueNode>({ point, dist });
+  expect(queueNode).toMatchObject<IQueueNode>({ point, corners });
 });
 
 it('checks start point or end point is valid', () => {
@@ -117,7 +118,6 @@ describe('fetch file data', () => {
   });
 
   it('fetch success', async () => {
-    const errorMsg: string = 'test error msg';
     const url: string = 'http//test-url';
     const getTextResponse = (): string => 'test';
 
@@ -126,22 +126,21 @@ describe('fetch file data', () => {
         Promise.resolve({ status: 200, text: getTextResponse })
     );
 
-    const result: string = await fetchFileData(url, errorMsg);
+    const result: string | null = await fetchFileData(url);
 
-    expect(result).toEqual(getTextResponse());
+    expect(result).toEqual<string>(getTextResponse());
   });
 
   it('fetch error', async () => {
-    const errorMsg: string = 'test error msg';
     const url: string = 'http//test-url';
 
     mocked(fetch).mockImplementation(
       (): Promise<any> => Promise.resolve({ status: 404 })
     );
 
-    const result: string = await fetchFileData(url, errorMsg);
+    const result: string | null = await fetchFileData(url);
 
-    expect(result).toEqual(errorMsg);
+    expect(result).toEqual<null>(null);
   });
 });
 
@@ -203,4 +202,28 @@ it('checks visited is created properly', () => {
     [false, false],
     [false, false]
   ]);
+});
+
+it('checks is path trace has corner', () => {
+  const pathTrace: IPoint[] = [
+    { x: 0, y: 0 },
+    { x: 1, y: 0 },
+    { x: 1, y: 1 }
+  ];
+
+  const cornersAmount: number = hasTraceCorner(pathTrace, 1);
+
+  expect(cornersAmount).toEqual<number>(2);
+});
+
+it("checks is path trace hasn't corner", () => {
+  const pathTrace: IPoint[] = [
+    { x: 0, y: 0 },
+    { x: 1, y: 0 },
+    { x: 2, y: 0 }
+  ];
+
+  const cornersAmount: number = hasTraceCorner(pathTrace, 1);
+
+  expect(cornersAmount).toEqual<number>(1);
 });
