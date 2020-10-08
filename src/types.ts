@@ -15,7 +15,7 @@ export interface IPoint {
 
 export interface IQueueNode {
   point: IPoint;
-  dist: number;
+  corner: number;
 }
 
 export type TVisited = boolean[][];
