@@ -1,9 +1,10 @@
 import { mocked } from 'ts-jest/utils';
 
 import {
-  getEndPoint,
   getPoint,
+  getEndPoint,
   getQueueNode,
+  serializeData,
   createVisited,
   fetchFileData,
   isValidPoint,
@@ -13,7 +14,13 @@ import {
   isValidEndStartPoints,
   countCornersAmount
 } from '../utils';
-import { IPoint, TVisited, TMatrix, IQueueNode } from '../types';
+import {
+  IPoint,
+  TVisited,
+  TMatrix,
+  IQueueNode,
+  ISerializedData
+} from '../types';
 
 jest.mock('node-fetch', () => jest.fn());
 import fetch from 'node-fetch';
@@ -219,4 +226,22 @@ it('checks corners amount counter', () => {
 
   expect(cornersAmountChange).toEqual<number>(3);
   expect(cornersAmountSame).toEqual<number>(2);
+});
+
+it('checks serialized data', () => {
+  const rawData: string = '2,3\n01\n01\n01';
+  const serializedDataExpect: ISerializedData = {
+    colsAmount: 2,
+    rowsAmount: 3,
+    endPoint: { x: 1, y: 1 },
+    matrix: [
+      ['0', '1'],
+      ['0', '1'],
+      ['0', '1']
+    ]
+  };
+
+  const serializedData: ISerializedData = serializeData(rawData);
+
+  expect(serializedData).toMatchObject<ISerializedData>(serializedDataExpect);
 });

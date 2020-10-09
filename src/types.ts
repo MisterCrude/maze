@@ -22,3 +22,10 @@ export interface IQueueNode {
 export type TVisited = boolean[][];
 
 export type TMatrix = string[][];
+
+export interface ISerializedData {
+  colsAmount: number;
+  rowsAmount: number;
+  endPoint: IPoint;
+  matrix: TMatrix;
+}

@@ -1,6 +1,12 @@
 import fetch, { Response } from 'node-fetch';
 
-import { IPoint, TVisited, TMatrix, IQueueNode } from './types';
+import {
+  IPoint,
+  TVisited,
+  TMatrix,
+  IQueueNode,
+  ISerializedData
+} from './types';
 
 export const print = (...args: any): void => console.log(...args);
 
@@ -72,4 +78,20 @@ export const countCornersAmount = (
     isCurrentHorizontal !== isHorizontalMovement;
 
   return isTurned ? cornersAmount + 1 : cornersAmount;
+};
+
+export const serializeData = (data: string): ISerializedData => {
+  const rawMatrix: string[] = data.split('\n');
+
+  const [
+    colsAmount,
+    rowsAmount
+  ]: number[] = (rawMatrix.shift() as string)
+    .split(',')
+    .map((item: string) => Number(item));
+
+  const matrix: TMatrix = rawMatrix.map((row: string) => row.split(''));
+  const endPoint: IPoint = getEndPoint(Number(colsAmount), Number(rowsAmount));
+
+  return { colsAmount, rowsAmount, endPoint, matrix };
 };

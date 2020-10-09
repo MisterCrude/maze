@@ -5,12 +5,13 @@ import messages from './messages';
 import { mainTmp } from './templates';
 import {
   print,
+  serializeData,
   createVisited,
+  countCornersAmount,
   getPoint,
-  getEndPoint,
   getQueueNode,
-  isValidPoint,
   fetchFileData,
+  isValidPoint,
   isVisitedPoint,
   isValidPointPath,
   isEndpointAchieved,
@@ -45,13 +46,10 @@ export const breadthFirstSearch = (
       const row: number = current.point.y + direction[1];
       const isHorizontalMovement: boolean = direction[0] !== 0;
 
-      const isTurned: boolean =
-        current.isHorizontal !== null &&
-        current.isHorizontal !== isHorizontalMovement;
-
-      const cornersAmount: number = isTurned
-        ? current.cornersAmount + 1
-        : current.cornersAmount;
+      const cornersAmount: number = countCornersAmount(
+        current,
+        isHorizontalMovement
+      );
 
       const isValidCurrentPoint: boolean =
         isValidPoint(col, row, COLS_AMOUNT, ROWS_AMOUNT) &&
@@ -87,17 +85,7 @@ export const breadthFirstSearch = (
 
   if (!fileData) return print(messages.fetchFileErrorMsg);
 
-  const rawMatrix: string[] = fileData.split('\n');
-
-  const [
-    colsAmount,
-    rowsAmount
-  ]: number[] = (rawMatrix.shift() as string)
-    .split(',')
-    .map((item: string) => Number(item));
-
-  const matrix: TMatrix = rawMatrix.map((row: string) => row.split(''));
-  const endPoint: IPoint = getEndPoint(Number(colsAmount), Number(rowsAmount));
+  const { colsAmount, rowsAmount, endPoint, matrix } = serializeData(fileData);
 
   const result: string = breadthFirstSearch(
     matrix,
