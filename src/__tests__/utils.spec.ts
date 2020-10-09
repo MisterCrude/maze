@@ -3,7 +3,6 @@ import { mocked } from 'ts-jest/utils';
 import {
   getEndPoint,
   getPoint,
-  hasTraceCorner,
   getQueueNode,
   createVisited,
   fetchFileData,
@@ -11,7 +10,8 @@ import {
   isVisitedPoint,
   isValidPointPath,
   isEndpointAchieved,
-  isValidEndStartPoints
+  isValidEndStartPoints,
+  countCornersAmount
 } from '../utils';
 import { IPoint, TVisited, TMatrix, IQueueNode } from '../types';
 
@@ -32,11 +32,14 @@ it('gets correct point', () => {
 
 it('gets queue node', () => {
   const point: IPoint = { x: 2, y: 4 };
-  const corners: number = 5;
 
-  const queueNode: IQueueNode = getQueueNode(point, corners);
+  const queueNode: IQueueNode = getQueueNode(point, false, 0);
 
-  expect(queueNode).toMatchObject<IQueueNode>({ point, corners });
+  expect(queueNode).toMatchObject<IQueueNode>({
+    point,
+    isHorizontal: false,
+    cornersAmount: 0
+  });
 });
 
 it('checks start point or end point is valid', () => {
@@ -204,26 +207,16 @@ it('checks visited is created properly', () => {
   ]);
 });
 
-it('checks is path trace has corner', () => {
-  const pathTrace: IPoint[] = [
-    { x: 0, y: 0 },
-    { x: 1, y: 0 },
-    { x: 1, y: 1 }
-  ];
+it('checks corners amount counter', () => {
+  const currentPoint: IQueueNode = {
+    point: { x: 1, y: 2 },
+    cornersAmount: 2,
+    isHorizontal: true
+  };
 
-  const cornersAmount: number = hasTraceCorner(pathTrace, 1);
+  const cornersAmountChange: number = countCornersAmount(currentPoint, false);
+  const cornersAmountSame: number = countCornersAmount(currentPoint, true);
 
-  expect(cornersAmount).toEqual<number>(2);
-});
-
-it("checks is path trace hasn't corner", () => {
-  const pathTrace: IPoint[] = [
-    { x: 0, y: 0 },
-    { x: 1, y: 0 },
-    { x: 2, y: 0 }
-  ];
-
-  const cornersAmount: number = hasTraceCorner(pathTrace, 1);
-
-  expect(cornersAmount).toEqual<number>(1);
+  expect(cornersAmountChange).toEqual<number>(3);
+  expect(cornersAmountSame).toEqual<number>(2);
 });
