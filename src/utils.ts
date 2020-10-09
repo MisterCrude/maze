@@ -95,3 +95,12 @@ export const serializeData = (data: string): ISerializedData => {
 
   return { colsAmount, rowsAmount, endPoint, matrix };
 };
+
+export const isMatrixValid = (
+  colsAmount: number,
+  rowsAmount: number
+): boolean =>
+  colsAmount >= 7 &&
+  colsAmount <= 10000 &&
+  rowsAmount >= 7 &&
+  rowsAmount <= 10000;

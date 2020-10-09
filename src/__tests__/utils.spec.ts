@@ -7,6 +7,7 @@ import {
   serializeData,
   createVisited,
   fetchFileData,
+  isMatrixValid,
   isValidPoint,
   isVisitedPoint,
   isValidPointPath,
@@ -244,4 +245,12 @@ it('checks serialized data', () => {
   const serializedData: ISerializedData = serializeData(rawData);
 
   expect(serializedData).toMatchObject<ISerializedData>(serializedDataExpect);
+});
+
+it('checks matrix size validation', () => {
+  const isValid: boolean = isMatrixValid(10, 10);
+  const isInvalid: boolean = isMatrixValid(10, 3);
+
+  expect(isValid).toBeTruthy();
+  expect(isInvalid).toBeFalsy();
 });

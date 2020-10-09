@@ -1,7 +1,9 @@
 #!/urs/bin/env node
 import clear from 'clear';
+import { Answers } from 'inquirer';
 
 import messages from './messages';
+import { questions } from './questions';
 import { mainTmp } from './templates';
 import {
   print,
@@ -11,13 +13,14 @@ import {
   getPoint,
   getQueueNode,
   fetchFileData,
+  isMatrixValid,
   isValidPoint,
   isVisitedPoint,
   isValidPointPath,
   isEndpointAchieved,
   isValidEndStartPoints
 } from './utils';
-import { IPoint, TVisited, TMatrix, IQueueNode } from './types';
+import { IPoint, TVisited, TMatrix, IQueueNode, FieldName } from './types';
 import { DIRECTIONS, START_POINT } from './constants';
 
 export const breadthFirstSearch = (
@@ -79,13 +82,17 @@ export const breadthFirstSearch = (
   clear();
   print(mainTmp(messages.appNameMsg));
 
+  const answer: Answers = await questions();
   const fileData: string | null = await fetchFileData(
-    'http://127.0.0.1:4000/assets/file.txt'
+    answer[FieldName.fileUrl]
   );
 
   if (!fileData) return print(messages.fetchFileErrorMsg);
 
   const { colsAmount, rowsAmount, endPoint, matrix } = serializeData(fileData);
+
+  if (!isMatrixValid(colsAmount, rowsAmount))
+    return print(messages.matrixValidationErrorMsg);
 
   const result: string = breadthFirstSearch(
     matrix,
